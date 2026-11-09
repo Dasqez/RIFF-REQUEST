@@ -8,19 +8,30 @@ type AppButtonProps = {
   icon?: string;
   variant?: 'primary' | 'secondary';
   style?: ViewStyle;
+  disabled?: boolean;
 };
 
-export function AppButton({ label, onPress, icon = '▶︎', variant = 'primary', style }: AppButtonProps) {
+export function AppButton({
+  label,
+  onPress,
+  icon = '▶︎',
+  variant = 'primary',
+  style,
+  disabled = false,
+}: AppButtonProps) {
   const secondary = variant === 'secondary';
 
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
         secondary && styles.secondaryButton,
         pressed && styles.pressed,
+        disabled && styles.disabled,
         style,
       ]}
     >
@@ -48,6 +59,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   pressed: { opacity: 0.78, transform: [{ scale: 0.99 }] },
+  disabled: { opacity: 0.55 },
   icon: { color: colors.black, fontSize: 18, fontWeight: '900' },
   label: { color: colors.black, fontSize: 17, fontWeight: '800' },
   secondaryText: { color: colors.text },

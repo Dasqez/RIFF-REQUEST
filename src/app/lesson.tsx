@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -11,6 +12,22 @@ import { colors, radii, spacing } from '@/theme';
 
 export default function LessonScreen() {
   const { lessonCompleted, completeLesson } = useProgress();
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  async function handleCompleteLesson() {
+    setIsSaving(true);
+    setSaveError(null);
+
+    try {
+      await completeLesson();
+    } catch (error) {
+      console.error('Nie udało się zapisać ukończenia lekcji.', error);
+      setSaveError('Nie udało się zapisać postępu. Spróbuj ponownie.');
+    } finally {
+      setIsSaving(false);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
@@ -80,14 +97,21 @@ export default function LessonScreen() {
             </View>
           )}
 
+          {saveError && (
+            <View accessibilityRole="alert" style={styles.errorCard}>
+              <Text style={styles.errorText}>{saveError}</Text>
+            </View>
+          )}
+
           <AppButton
-            label={lessonCompleted ? 'Wróć na start' : 'Ukończyłem ćwiczenie'}
-            icon={lessonCompleted ? '⌂' : '✓'}
+            label={lessonCompleted ? 'Wróć na start' : isSaving ? 'Zapisywanie…' : 'Ukończyłem ćwiczenie'}
+            icon={lessonCompleted ? '⌂' : isSaving ? '…' : '✓'}
+            disabled={isSaving}
             onPress={() => {
               if (lessonCompleted) {
                 router.replace('/');
               } else {
-                completeLesson();
+                void handleCompleteLesson();
               }
             }}
           />
@@ -131,6 +155,8 @@ const styles = StyleSheet.create({
   stepDescription: { color: colors.textMuted, fontSize: 13, lineHeight: 19 },
   readyNote: { borderRadius: radii.md, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.border, padding: spacing.md },
   readyNoteText: { color: colors.textMuted, textAlign: 'center', fontSize: 13, lineHeight: 19 },
+  errorCard: { borderRadius: radii.md, borderWidth: 1, borderColor: '#8F4A4A', backgroundColor: '#351D1D', padding: spacing.md },
+  errorText: { color: '#FFD2D2', textAlign: 'center', fontSize: 13, lineHeight: 19 },
   successCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, borderRadius: radii.lg, borderWidth: 1, borderColor: '#456934', backgroundColor: colors.successSurface, padding: spacing.md },
   successIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: colors.success, alignItems: 'center', justifyContent: 'center' },
   successIconText: { color: colors.black, fontSize: 24, fontWeight: '900' },

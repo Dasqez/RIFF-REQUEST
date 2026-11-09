@@ -12,7 +12,7 @@ Statusy: **Gotowe**, **Planowane**, **Eksperyment techniczny**.
 - oznaczenie ukończenia i powrót z widocznym postępem,
 - polski, responsywny interfejs dla Expo na iOS, Androidzie i web.
 
-Ograniczenie: postęp działa w bieżącej sesji i nie jest jeszcze zapisywany po restarcie.
+Po Etapie 0 dodano pierwszy mały fragment Etapu 1: ukończenie pierwszej lekcji jest zapisywane lokalnie i odtwarzane po restarcie lub odświeżeniu aplikacji.
 
 ## Etap 1 — pierwsza użyteczna wersja — Planowane
 
@@ -25,7 +25,8 @@ Cel: użytkownik może nauczyć się pierwszego autorskiego riffu.
 - interaktywny gryf z oznaczeniem palców oraz widok prawo- i leworęczny,
 - odtwarzanie wzorca i zsynchronizowana tabulatura,
 - odliczanie, regulacja tempa, pętla fragmentu i metronom,
-- trwały lokalny zapis postępu oraz wznowienie lekcji.
+- trwały lokalny zapis ukończenia pierwszej lekcji — **Gotowe**,
+- wznowienie lekcji od konkretnego kroku — **Planowane**.
 
 ## Etap 2 — multimedia i codzienna nauka — Planowane
 

@@ -9,10 +9,11 @@ RIFF QUEST to mobilna aplikacja do nauki gry na gitarze elektrycznej od absolutn
 - wizualizacja sześciu strun z zaznaczoną niską struną E,
 - poprawna tabulatura czterech pustych dźwięków: `0 0 0 0` na dolnej linii E,
 - oznaczenie ukończenia i aktualizacja postępu na ekranie startowym,
+- trwały zapis ukończenia lekcji po zamknięciu lub odświeżeniu aplikacji,
 - układ dostosowany do telefonu i przeglądarki,
 - routing przygotowany dla Androida, iOS i web.
 
-Postęp jest obecnie przechowywany tylko podczas bieżącego uruchomienia aplikacji. Zamknięcie lub odświeżenie aplikacji zeruje go.
+Postęp jest przechowywany lokalnie przez AsyncStorage. Podczas uruchamiania aplikacja najpierw bezpiecznie odczytuje i sprawdza zapis, dlatego ekran główny nie pokazuje przejściowego, błędnego wyniku `0 / 1`. Lekcję można ponownie otworzyć po jej ukończeniu.
 
 ## Uruchomienie na Windowsie
 
@@ -56,10 +57,20 @@ Build statycznego podglądu web:
 npx expo export --platform web
 ```
 
+### Reset postępu do testów
+
+Aplikacja celowo nie pokazuje użytkownikowi przycisku resetowania. Na webie usuń wyłącznie klucz postępu w konsoli narzędzi deweloperskich przeglądarki i odśwież stronę:
+
+```js
+localStorage.removeItem('@riff-quest/progress:v1');
+```
+
+Na Androidzie lub iOS wyczyść dane aplikacji albo odinstaluj ją z urządzenia testowego. Klucz używany przez kod jest również eksportowany jako `PROGRESS_STORAGE_KEY`, a funkcja `resetProgressForTesting()` w `src/storage/progressStorage.ts` jest przeznaczona dla przyszłych testów automatycznych i narzędzi deweloperskich.
+
 ## Aktualny zakres
 
 Etap 0 nie używa mikrofonu, analizy dźwięku, interfejsu Behringer, odtwarzacza, metronomu, kont ani backendu. Te funkcje pozostają w [ROADMAP.md](./ROADMAP.md).
 
 ## Następny mały krok
 
-Dodać lokalny zapis ukończenia pierwszej lekcji przez zgodny z Expo mechanizm pamięci urządzenia, bez zmiany obecnej ścieżki użytkownika.
+Rozpocząć kolejny mały fragment Etapu 1 bez rozszerzania jeszcze zakresu o mikrofon lub analizę audio.
