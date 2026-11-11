@@ -1,11 +1,12 @@
-import { Pressable, StyleSheet, Text, ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
+import { Icon, IconName } from '@/components/Icon';
 import { colors, radii, spacing } from '@/theme';
 
 type AppButtonProps = {
   label: string;
   onPress: () => void;
-  icon?: string;
+  icon?: IconName;
   variant?: 'primary' | 'secondary';
   style?: ViewStyle;
   disabled?: boolean;
@@ -14,7 +15,7 @@ type AppButtonProps = {
 export function AppButton({
   label,
   onPress,
-  icon = '▶︎',
+  icon,
   variant = 'primary',
   style,
   disabled = false,
@@ -24,20 +25,22 @@ export function AppButton({
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={label}
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
-        secondary && styles.secondaryButton,
-        pressed && styles.pressed,
+        secondary ? styles.secondary : styles.primary,
+        pressed && (secondary ? styles.pressedSecondary : styles.pressedPrimary),
         disabled && styles.disabled,
         style,
       ]}
     >
-      <Text style={[styles.icon, secondary && styles.secondaryText]}>{icon}</Text>
-      <Text style={[styles.label, secondary && styles.secondaryText]}>{label}</Text>
-      {!secondary && <Text style={styles.arrow}>›</Text>}
+      <View style={styles.content}>
+        {icon && <Icon name={icon} size={20} color={secondary ? colors.text : colors.black} />}
+        <Text style={[styles.label, secondary && styles.secondaryLabel]}>{label}</Text>
+      </View>
     </Pressable>
   );
 }
@@ -47,28 +50,27 @@ const styles = StyleSheet.create({
     minHeight: 58,
     paddingHorizontal: spacing.lg,
     borderRadius: radii.md,
-    backgroundColor: colors.accent,
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
   },
-  secondaryButton: {
+  primary: {
+    backgroundColor: colors.primary,
+    borderBottomWidth: 5,
+    borderBottomColor: colors.primaryDark,
+    shadowColor: colors.primary,
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+  },
+  secondary: {
     backgroundColor: colors.surfaceRaised,
     borderWidth: 1,
     borderColor: colors.border,
   },
-  pressed: { opacity: 0.78, transform: [{ scale: 0.99 }] },
+  pressedPrimary: { borderBottomWidth: 2, transform: [{ translateY: 3 }] },
+  pressedSecondary: { opacity: 0.75, transform: [{ scale: 0.98 }] },
   disabled: { opacity: 0.55 },
-  icon: { color: colors.black, fontSize: 18, fontWeight: '900' },
-  label: { color: colors.black, fontSize: 17, fontWeight: '800' },
-  secondaryText: { color: colors.text },
-  arrow: {
-    position: 'absolute',
-    right: spacing.lg,
-    color: colors.black,
-    fontSize: 32,
-    fontWeight: '500',
-    marginTop: -3,
-  },
+  content: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  label: { color: colors.black, fontSize: 16, fontWeight: '800' },
+  secondaryLabel: { color: colors.text },
 });

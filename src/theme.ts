@@ -1,16 +1,29 @@
 export const colors = {
-  background: '#0C0F0D',
-  surface: '#151A17',
-  surfaceRaised: '#1B211D',
-  border: '#2B332E',
-  accent: '#B7FF2A',
-  accentMuted: '#293A18',
-  text: '#F6F8F6',
-  textMuted: '#AEB7B1',
+  background: '#0B0A09',
+  surface: '#171412',
+  surfaceRaised: '#221D19',
+  border: '#33291F',
+  primary: '#FF6A1A',
+  primaryDark: '#9C3A08',
+  primarySurface: '#2A1709',
+  secondary: '#FFC23D',
+  secondarySurface: '#2B2110',
+  accent: '#FF8F4D',
+  text: '#F7F1EA',
+  textMuted: '#B2A596',
   success: '#8EDB4F',
-  successSurface: '#19301E',
-  black: '#071006',
+  black: '#1A0900',
+  line: '#5A4A38',
+} as const;
+
+export const fonts = {
+  display: 'BarlowCondensed_800ExtraBold_Italic',
 } as const;
 
 export const spacing = { xs: 6, sm: 10, md: 16, lg: 24, xl: 32 } as const;
-export const radii = { sm: 12, md: 18, lg: 26, pill: 999 } as const;
+export const radii = { sm: 12, md: 18, lg: 22, xl: 26, pill: 999 } as const;
+
+export const displayText = {
+  fontFamily: fonts.display,
+  textTransform: 'uppercase',
+} as const;

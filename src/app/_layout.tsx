@@ -1,3 +1,7 @@
+import {
+  BarlowCondensed_800ExtraBold_Italic,
+  useFonts,
+} from '@expo-google-fonts/barlow-condensed';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
@@ -9,6 +13,7 @@ import { colors, spacing } from '@/theme';
 
 function AppContent() {
   const { isProgressReady, progressLoadError, retryProgressLoad } = useProgress();
+  const [fontsLoaded, fontError] = useFonts({ BarlowCondensed_800ExtraBold_Italic });
 
   if (progressLoadError) {
     return (
@@ -17,30 +22,32 @@ function AppContent() {
         <Text style={styles.stateDescription}>
           Twoje dane nie zostały zmienione. Sprawdź pamięć urządzenia i spróbuj ponownie.
         </Text>
-        <AppButton label="Spróbuj ponownie" icon="↻" onPress={retryProgressLoad} />
+        <AppButton label="Spróbuj ponownie" icon="refresh-cw" onPress={retryProgressLoad} />
       </View>
     );
   }
 
-  if (!isProgressReady) {
+  if (!isProgressReady || (!fontsLoaded && !fontError)) {
     return (
-      <View accessibilityLabel="Wczytywanie zapisanego postępu" style={styles.stateScreen}>
-        <ActivityIndicator color={colors.accent} size="large" />
-        <Text style={styles.stateDescription}>Wczytywanie postępu…</Text>
+      <View accessibilityLabel="Wczytywanie aplikacji" style={styles.stateScreen}>
+        <ActivityIndicator color={colors.primary} size="large" />
+        <Text style={styles.stateDescription}>Wczytywanie…</Text>
       </View>
     );
   }
 
   return (
-    <>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: colors.background },
-          animation: 'slide_from_right',
-        }}
-      />
-    </>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: colors.background },
+        animation: 'slide_from_right',
+      }}
+    >
+      <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+      <Stack.Screen name="onboarding" options={{ animation: 'fade', gestureEnabled: false }} />
+      <Stack.Screen name="complete" options={{ animation: 'fade', gestureEnabled: false }} />
+    </Stack>
   );
 }
 
@@ -64,12 +71,7 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     backgroundColor: colors.background,
   },
-  stateTitle: {
-    color: colors.text,
-    fontSize: 22,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
+  stateTitle: { color: colors.text, fontSize: 22, fontWeight: '900', textAlign: 'center' },
   stateDescription: {
     maxWidth: 420,
     color: colors.textMuted,
